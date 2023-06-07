@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recherche de Films et Séries</title>
+  <style>
+  body {
+    background-color: #141414;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1 {
+    font-size: 42px;
+    color: #6109e5;
+    font-weight: bold;
+    letter-spacing: -1px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  form {
+    margin: 0 auto;
+    max-width: 500px;
+    padding: 30px;
+    background-color: #202020;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  label {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    width: 100px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #414141;
+    color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'><path fill='%23fff' d='M4 5L0 1h8z'/></svg>") no-repeat;
+    background-size: 8px 5px;
+    background-position: right center;
+  }
+
+  input[type="submit"] {
+    display: block;
+    width: 100%;
+    background-color: #6109e5;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #6109e5;
+  }
+
+  @media screen and (max-width: 500px) {
+    form {
+      padding: 15px;
+    }
+
+    label {
+      font-size: 18px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      font-size: 20px;
+      padding: 8px;
+    }
+    #birthdate {
+      font-size: 1.2em;
+    }
+  }
+
+  .button-container {
+    text-align: left;
+  }
+
+  .button-container button {
+    margin: 0 10px;
+  }
+  .resultat {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0;
+}
+
+.resultat li {
+  margin: 5px;
+}
+
+
+</style>
+
+
+
+  <script>
+    async function showfilms() {
+        let film = document.rechercheDeFilm.titre_film.value;
+        let url = '/' + film + '/infos'
+        let response = await fetch(url);
+        let data = await response.json();
+        if(data['data'][0] == undefined){
+          console.log("non")
+          document.getElementById("resultat-container").innerHTML += "Le film n'existe pas"
+
+        }
+
+        else {
+          console.log("Data[0] :" + data['data'][0]["Titre_film"])
+          document.getElementById("resultat-container").innerHTML += 'Nom du film: ' + data['data'][0]["Titre_film"] +['<li>']
+              + ' Durée du film: ' + data['data'][0]["Durée_film"] + ' min '+['<li>']
+                  +' Année de sortie: '+  data['data'][0]["Année_film"] +['<li>'] + 'genres du film: ' + data['data'][0]["Genres_film"] +['<li>']
+              + ' Nom du réalisateur: ' + data['data'][0]["Nom_réalisateur"]
+
+        }
+        }
+
+        async function showacteur(){
+            let Acteur = document.rechercheActeur.nomActeur.value;
+        let url = '/' + Acteur + '/actor'
+        let response = await fetch(url);
+        let data = await response.json();
+        if(data['data'][0] == undefined){
+          console.log("non")
+          document.getElementById("resultat-container").innerHTML += "L'acteur n'existe pas !!"
+
+        } else{
+          document.getElementById("resultat-container").innerHTML += 'Nom Acteur: ' + data['data'][0]["Nom_Acteur"] +['<li>']
+              + ' film dans lequel il a joué: ' + data['data'][0]["film_joué"] +['<li>']
+                  +' Date de naissance: '+  data['data'][0]["Date_de_naissance_acteur"]
+        }
+
+        }
+
+        async function showseries(){
+            let series = document.rechercheSeries.titre_series.value;
+        let url = '/' + series + '/watch'
+        let response = await fetch(url);
+        let data = await response.json();
+        if(data['data'][0] == undefined){
+          console.log("non")
+          document.getElementById("resultat-container").innerHTML += "La série n'existe pas !!"
+        }
+        else{
+          document.getElementById("resultat-container").innerHTML += 'Nom de la série: ' + data['data'][0]["Titre_séries"] +['<li>']
+              + ' Durée de la série: ' + data['data'][0]["Durée_séries"] + ' min '+['<li>']
+                  +' Année de sortie: '+  data['data'][0]["Année_séries"] +['<li>'] + 'genres de la série: ' + data['data'][0]["Genres_séries"]
+        }
+
+        }
+
+        async function showrealisateur(){
+            let réalisateur = document.rechercheRealisateur.director.value
+        let url = '/' + réalisateur + '/director'
+        let response = await fetch(url);
+        let data = await response.json();
+        if(data['data'][0] == undefined){
+          console.log("non")
+          document.getElementById("resultat-container").innerHTML += "Le réalisateur n'existe pas !!"
+        }
+        else{
+          document.getElementById("resultat-container").innerHTML += 'Nom Réalisateur: ' + data['data'][0]["Nom_réalisateur"] +['<li>']
+              + ' film réalisé: ' + data['data'][0]["Film_connu"] +['<li>']
+                  +' Date de naissance: '+  data['data'][0]["Date_de_naissance_réalisateur"]
+        }
+        }
+
+
+        async function showgenresfilm() {
+  let genresfilm = document.rechercheGenresfilm.gfilms.value;
+  let url = '/' + genresfilm + '/gfilms';
+  let response = await fetch(url);
+  let data = await response.json();
+
+  if (data['data'].length === 0) {
+    console.log("non");
+    document.getElementById("resultat-container").innerHTML += "Le genre n'existe pas !!";
+  } else {
+    for (let i = 0; i < data['data'].length; i++) {
+      document.getElementById("resultat-container").innerHTML += 'Nom du film: ' + data['data'][i]["Genresfilm"]["Titre_film"] + '<br>' +
+                                                                'Durée du film: ' + data['data'][i]["Genresfilm"]["Durée_film"] + ' min<br>' +
+                                                                'Année de sortie: ' + data['data'][i]["Genresfilm"]["Année_film"] + '<br>' +
+                                                                'Nom du réalisateur: ' + data['data'][i]["Genresfilm"]["Nom_réalisateur"] + '<br><br>';
+    }
+  }
+}
+
+async function showgenresseries() {
+  let genresserie = document.rechercheGenresseries.gseries.value;
+  let url = '/' + genresserie + '/gseries';
+  let response = await fetch(url);
+  let data = await response.json();
+
+  if (data['data'].length === 0) {
+    console.log("non");
+    document.getElementById("resultat-container").innerHTML += "Le genre n'existe pas !!";
+  } else {
+    for (let i = 0; i < data['data'].length; i++) {
+      document.getElementById("resultat-container").innerHTML += 'Nom de la série: ' + data['data'][i]["Genresseries"]["Titre_séries"] + '<br>' +
+                                                                'Durée de la série: ' + data['data'][i]["Genresseries"]["Durée_séries"] + ' min<br>' +
+                                                                'Année de sortie: ' + data['data'][i]["Genresseries"]["Année_séries"] + '<br>' + '<br>'
+
+    }
+  }
+}
+
+
+
+</script>
+</head>
+<body>
+  <h1>Recherche de Films et Séries</h1>
+
+  <div class="button-container">
+    <button id="all-films-btn" onclick="window.location.href = 'films';">Tous les Films</button>
+    <button id="all-series-btn" onclick="window.location.href = 'séries';">Toutes les Séries</button>
+  </div>
+
+<form name="rechercheDeFilm" method="GET">
+  <div class="form-group">
+    <label for="titre-film-input"> Films:</label>
+    <input type="text" id="titre-film-input" name="titre_film">
+    <input type="button" onclick="showfilms()">Rechercher</input>
+  </div>
+</form>
+
+
+
+<form name="rechercheSeries" method="GET">
+  <div class="form-group">
+      <label for="name-series-input">Séries :</label>
+      <input type="text" id="name-series-input" name="titre_series">
+       <input type="button" onclick="showseries()">Rechercher</input>
+    </div>
+  </form>
+
+<form name="rechercheActeur" method="GET">
+    <div class="form-group">
+      <label for="nomActeur-input">Acteur:</label>
+      <input type="text" id="nomActeur-input" name="nomActeur">
+       <input type="button" onclick="showacteur()">Rechercher</input>
+    </div>
+  </form>
+ <form name="rechercheRealisateur" method="GET">
+    <div class="form-group">
+      <label for="director-input">Réalisateur:</label>
+      <input type="text" id="director-input" name="director">
+       <input type="button" onclick="showrealisateur()">Rechercher</input>
+    </div>
+  </form>
+  <form name="rechercheGenresfilm" method = "GET">
+    <div class="form-group">
+      <label for="genre-select-film">Genres Films:</label>
+      <select id="genre-select-film" name="gfilms">
+        <option value="">Tous</option>
+        <option value="action">Action</option>
+        <option value="comedy">Comédie</option>
+        <option value="drama">Drame</option>
+        <option value="horror">Horreur</option>
+         <option value="sci-fi">Science-Fiction</option>
+         <option value="thriller">Thriller</option>
+      </select>
+       <input type="button" onclick="showgenresfilm()">Rechercher</input>
+    </div>
+    </form>
+  <form name="rechercheGenresseries" method ='GET'>
+    <div class="form-group">
+      <label for="genre-select-séries">Genres Séries:</label>
+      <select id="genre-select-séries" name="gseries">
+        <option value="">Tous</option>
+        <option value="action">Action</option>
+        <option value="comedy">Comédie</option>
+        <option value="drama">Drame</option>
+        <option value="horror">Horreur</option>
+        <option value="sci-fi">Science-Fiction</option>
+         <option value="thriller">Thriller</option>
+      </select>
+       <input type="button" onclick="showgenresseries()">Rechercher</input>
+    </div>
+      </form>
+
+  <div id="resultat-container" class="resultat"></div>
+
+
+
+</body>
+</html>
+
+
+
